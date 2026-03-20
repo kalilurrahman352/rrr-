@@ -11,8 +11,9 @@ try {
     const secp   = require("secp256k1");
     const keccak = require("keccak");
     fastPubkey = (privBuf) => {
-        const pub = secp.publicKeyCreate(privBuf, false).slice(1); // 64 bytes uncompressed
-        const hash = keccak("keccak256").update(pub).digest();
+        const pubRaw = secp.publicKeyCreate(Buffer.from(privBuf), false);
+        const pub    = Buffer.from(pubRaw).slice(1); // 64 bytes uncompressed
+        const hash   = keccak("keccak256").update(pub).digest();
         return "0x" + hash.slice(12).toString("hex");
     };
     if (isMainThread) console.log("\x1b[32m⚡ Native secp256k1 loaded - FAST MODE\x1b[0m");
